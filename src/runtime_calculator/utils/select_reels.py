@@ -9,8 +9,8 @@ from resolvecommon import folders, formatting
 from ..utils import match_info
 
 if typing.TYPE_CHECKING:
-	import DaVinciResolveScript as bmd
-	resolve:bmd.Resolve
+	import DaVinciResolveScript as dvrtypes
+	resolve:dvrtypes.Resolve
 	
 type ParsedVersion = list[str,int]
 """Parsed, comparible version string"""
@@ -26,10 +26,10 @@ def refresh_project():
 	logging.getLogger(__name__).info("Refreshing folders...")
 	mp.RefreshFolders()
 
-def get_latest_from_project(match_options:match_info.TRTLatestMatchOptions) -> list[bmd.MediaPoolItem]:
+def get_latest_from_project(match_options:match_info.TRTLatestMatchOptions) -> list[dvrtypes.MediaPoolItem]:
 	"""Determine the latest things"""
 
-	latest_per_part:dict[str, list[tuple[ParsedVersion, bmd.MediaPoolItem]]] = dict()
+	latest_per_part:dict[str, list[tuple[ParsedVersion, dvrtypes.MediaPoolItem]]] = dict()
 
 	base_folder   = folders.get_folder_from_path(match_options.match_path, mp.GetRootFolder())  if match_options.match_path else mp.GetRootFolder()
 	ignore_folder = folders.get_folder_from_path(match_options.ignore_path, mp.GetRootFolder()) if match_options.ignore_path else None
@@ -65,7 +65,7 @@ def get_latest_from_project(match_options:match_info.TRTLatestMatchOptions) -> l
 
 	return [item[1] for items in latest_per_part.values() for item in items]
 
-def get_selected_media_pool_items() -> list[bmd.MediaPoolItem]:
+def get_selected_media_pool_items() -> list[dvrtypes.MediaPoolItem]:
 	"""Return selected media pool clips"""
 	
 	return mp.GetSelectedClips() or []
