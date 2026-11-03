@@ -52,8 +52,8 @@ class TRTMainWindowController:
 
 		self._event_dispatcher.register_window_handle(window_handle)
 
-		self._main_widget.trim_controls().ffoa_input_controller().register_window_handle(window_handle)
-		self._main_widget.trim_controls().lfoa_input_controller().register_window_handle(window_handle)
+		self._main_widget.trim_options_controller().ffoa_input_controller().register_window_handle(window_handle)
+		self._main_widget.trim_options_controller().lfoa_input_controller().register_window_handle(window_handle)
 
 	def set_match_options(self, match_options:match_info.TRTLatestMatchOptions):
 		"""Set the options for matching Latest Items"""
@@ -70,7 +70,7 @@ class TRTMainWindowController:
 	def set_trim_options(self, trim_options:trim_info.TRTTrimOptions):
 		"""Set the trim options to be used"""
 
-		self._main_widget.trim_controls().set_trim_options(trim_options)
+		self._main_widget.trim_options_controller().set_trim_options(trim_options)
 
 	def marker_options(self) -> marker_info.TRTMarkerOptions:
 		"""Get the currently used marker options"""
@@ -85,7 +85,7 @@ class TRTMainWindowController:
 	def trim_options(self) -> trim_info.TRTTrimOptions:
 		"""The trim options currently in use"""
 
-		return self._main_widget.trim_controls().trim_options()
+		return self._main_widget.trim_options_controller().trim_options()
 
 	def main_window_widget(self) -> wnd_main.TRTMainWidget:
 
@@ -155,7 +155,7 @@ class TRTMainWindowController:
 
 		self.set_busy("Finding latest...")
 
-		trim_options = self.main_window_widget().trim_controls().trim_options()
+		trim_options = self.main_window_widget().trim_options_controller().trim_options()
 		status_messages = []
 
 		latest_reels  = []
@@ -203,7 +203,7 @@ class TRTMainWindowController:
 
 		self.set_busy("Loading selected...")
 
-		trim_options = self.main_window_widget().trim_controls().trim_options()
+		trim_options = self.main_window_widget().trim_options_controller().trim_options()
 
 		trimmed_reels:list[trim_info.TRTTrimInfo] = []
 		skipped_reels = []
@@ -339,7 +339,7 @@ class TRTMainWindowController:
 		"""Set window state to busy"""
 
 		self._main_widget._list_controls().set_enabled(False)
-		self._main_widget.trim_controls().set_enabled(False)
+		self._main_widget.trim_options_controller().set_enabled(False)
 		self._main_widget.export_button().Enabled = False
 
 		if status_message is not None:
@@ -348,7 +348,7 @@ class TRTMainWindowController:
 	def set_ready(self, status_message:str|None=None):
 		"""Set window state to ready"""
 
-		self._main_widget.trim_controls().set_enabled(True)
+		self._main_widget.trim_options_controller().set_enabled(True)
 
 		# Enable export/clear buttons if the tree is populated
 		tree_is_populated = not self._main_widget.tree_results().is_empty()

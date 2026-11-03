@@ -6,13 +6,12 @@ from .utils import logs, user_config
 from .mainwindow import wnd_main
 
 from resolvecommon import userpaths
-from . import ui, dispatcher
 
 if typing.TYPE_CHECKING:
 	import DaVinciResolveScript as dvrtypes
 
 # User locations, macOS only
-PATH_USER_BASE = userpaths.get_user_base_path() / "GlowingPixel" / "Resolve Runtime Calculator"
+PATH_USER_BASE = userpaths.get_user_data_base_path() / "GlowingPixel" / "Resolve Runtime Calculator"
 PATH_CFG_USER  = PATH_USER_BASE / "config" / "user_config.json"
 PATH_LOG_USER  = PATH_USER_BASE / "logs" / "user_logs.log"
 
@@ -23,7 +22,7 @@ def main(bmd:object, resolve:dvrtypes.Resolve, fusion:dvrtypes.Fusion):
 	# If an instance is already running (window is registered with UIDispatcher), 
 	# just raise the existing window and get the heck outta there buddy.
 
-	if win:= ui.FindWindow(wnd_main.ID_WINDOW_MAIN):
+	if win:= fusion.UIManager.FindWindow(wnd_main.ID_WINDOW_MAIN):
 
 		win.Show()
 		win.Raise()

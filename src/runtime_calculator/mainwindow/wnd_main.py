@@ -8,6 +8,7 @@ import typing
 from .tree_results import TRTTreeResults
 from .panel_treecontrols import TRTTreeControlsWidget
 from .panel_trimoptions import TRTTrimOptionsWidget
+from .controller_trimoptions import TRTTrimOptionsController
 from .panel_summary import TRTSummaryPanel
 from .panel_about import TRTAboutPanel
 
@@ -38,7 +39,8 @@ class TRTMainWidget(TRTAbstractWidget):
 		
 		self._ui = ui_manager
 
-		self._trim_controls = TRTTrimOptionsWidget(project_manager, self._ui)
+		self._trim_controls_widget = TRTTrimOptionsWidget(self._ui)
+		self._trim_controls_contoller = TRTTrimOptionsController(project_manager, self._trim_controls_widget)
 
 		self._list_controls = TRTTreeControlsWidget(self._ui)
 
@@ -75,7 +77,7 @@ class TRTMainWidget(TRTAbstractWidget):
 	def layout(self):
 		
 		return self._ui.VGroup([
-			self._trim_controls.layout(),
+			self._trim_controls_widget.layout(),
 
 			self._ui.Label({"FrameStyle": 4}),
 
@@ -97,10 +99,10 @@ class TRTMainWidget(TRTAbstractWidget):
 		
 		return self._tree_trims
 
-	def trim_controls(self) -> TRTTrimOptionsWidget:
-		"""The Trim Options editor"""
+	def trim_options_controller(self) -> TRTTrimOptionsController:
+		"""The Trim Options editor controller"""
 
-		return self._trim_controls
+		return self._trim_controls_contoller
 
 	def summary_display(self) -> TRTSummaryPanel:
 		"""The Summary display panel"""
