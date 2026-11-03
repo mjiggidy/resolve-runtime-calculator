@@ -4,11 +4,10 @@ Main app controller for the main window widget
 
 import logging
 
-from . import eventdispatcher
+from . import eventdispatcher, wnd_main
+from ..utils import trim_info, match_info, marker_info, select_reels
 
-from ..utils import trim_info, match_info, marker_info, select_reels, formatting
-from . import wnd_main
-
+from resolvecommon import formatting
 
 class TRTMainWindowController:
 	"""Main application window controller"""
