@@ -64,7 +64,7 @@ class TRTEventDispatcher:
 		
 		logging.getLogger(__name__).debug("Got add-selected event.   Modifiers: %s", str(event.get("modifiers",{})))
 
-		if event.get("modifiers",{}).get("ControlModifier",False):
+		if event["modifiers"]["ControlModifier"]:
 			self._controller.clear_all()
 
 		self._controller.add_selected_reels()
@@ -78,7 +78,7 @@ class TRTEventDispatcher:
 		"""`Delete` and `Backspace` key IDs"""
 
 		# Currently only for "Delete" key in Tree widget
-		if event.get("Key") in KEY_DELETE and not event.get("IsAutoRepeat",False) and event.get("sender").FocusWidget().ID == tree_results.ID_TREE_VIEW:
+		if event["Key"] in KEY_DELETE and not event["IsAutoRepeat"] and event["sender"].FocusWidget().ID == tree_results.ID_TREE_VIEW:
 
 			logging.getLogger(__name__).debug("Key up indicates remove tree item")
 			self._controller.remove_selected_trim_items()

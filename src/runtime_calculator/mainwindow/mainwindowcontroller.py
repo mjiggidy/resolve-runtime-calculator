@@ -19,6 +19,7 @@ class TRTMainWindowController:
 
 	def __init__(self,
 	    project_manager :dvrtypes.Resolve,
+	    fusion          :dvrtypes.Fusion,
 		main_widget     :wnd_main.TRTMainWidget,
 		/,
 		match_options   :match_info.TRTLatestMatchOptions,
@@ -27,6 +28,7 @@ class TRTMainWindowController:
 	):
 
 		self._project_manager = project_manager
+		self._fusion          = fusion  # For the Save File dialog... hmmmm...
 
 		self._main_widget = main_widget
 		"""Main window widget"""
@@ -200,7 +202,6 @@ class TRTMainWindowController:
 		
 		logging.getLogger(__name__).info("Selected reels requested")
 
-
 		self.set_busy("Loading selected...")
 
 		trim_options = self.main_window_widget().trim_options_controller().trim_options()
@@ -293,14 +294,14 @@ class TRTMainWindowController:
 		save_project_name = " Runtime List"
 
 		try:
-			save_project_name = re.sub(r"[^a-z0-9\-_ ]+", "_", resolve.GetProjectManager().GetCurrentProject().GetName(), flags=re.I).strip() + save_project_name
+			save_project_name = re.sub(r"[^a-z0-9\-_ ]+", "_", self._project_manager.GetCurrentProject().GetName(), flags=re.I).strip() + save_project_name
 
 		except Exception as e:
 			logging.getLogger(__name__).debug("Error sanitizing project name: %s", e, exc_info=True)
 			save_project_name = "My Cool" + save_project_name
 
 
-		chosen_path = fusion.RequestFile(
+		chosen_path = self._fusion.RequestFile(
 			save_project_path,
 			save_project_name,
 			{
@@ -338,7 +339,7 @@ class TRTMainWindowController:
 	def set_busy(self, status_message:str|None=None):
 		"""Set window state to busy"""
 
-		self._main_widget._list_controls().set_enabled(False)
+		self._main_widget._list_controls.set_enabled(False)
 		self._main_widget.trim_options_controller().set_enabled(False)
 		self._main_widget.export_button().Enabled = False
 

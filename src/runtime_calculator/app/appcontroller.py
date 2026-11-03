@@ -34,6 +34,7 @@ class TRTApplicationController:
 
 		self._main_controller = mainwindowcontroller.TRTMainWindowController(
 			resolve.GetProjectManager(),
+			fusion,
 			self._main_widget,
 			match_options=match_options,
 			trim_options=trim_options,
@@ -71,7 +72,6 @@ class TRTApplicationController:
 		# Launch dat winder
 		
 		self._main_window.Show()
-
 		self._ui_dispatcher.RunLoop()
 
 	# Events handlings

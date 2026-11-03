@@ -10,6 +10,7 @@ if typing.TYPE_CHECKING:
 	import DaVinciResolveScript as dvrtypes
 
 class TRTTrimOptionsController:
+	"""Controller for the Trim Options widget"""
 
 	def __init__(self, project_manager: dvrtypes.ProjectManager, trim_options_widget:TRTTrimOptionsWidget):
 
@@ -29,14 +30,13 @@ class TRTTrimOptionsController:
 			as_duration=True
 		)
 
-
 	def set_enabled(self, is_enabled:bool):
 
-		self._widget.use_ffoa_checkbox.SetEnabled(is_enabled)
-		self._widget.use_lfoa_checkbox.SetEnabled(is_enabled)
+		self._widget.use_ffoa_checkbox().Enabled = is_enabled
+		self._widget.use_lfoa_checkbox().Enabled = is_enabled
 
-		self._widget.trim_head_input().SetEnabled(is_enabled)
-		self._widget.trim_tail_input().SetEnabled(is_enabled)
+		self._widget.trim_head_input().Enabled   = is_enabled
+		self._widget.trim_tail_input().Enabled   = is_enabled
 
 	def trim_options(self) -> trim_info.TRTTrimOptions:
 		"""Collect the currently-set trim options"""
