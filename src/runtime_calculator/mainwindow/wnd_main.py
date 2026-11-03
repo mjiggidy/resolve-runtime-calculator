@@ -10,11 +10,11 @@ from .panel_summary import TRTSummaryPanel
 from .panel_about import TRTAboutPanel
 
 from ..gui.abstract_widget import TRTAbstractWidget
-
-from ..utils.formatting import format_timecode_as_duration
 from ..utils.trim_info import TRTTrimInfo
-
 from .. import __version__
+
+from resolvecommon import formatting
+
 
 DEFAULT_WINDOW_TITLE = "Runtime Calculator"
 
@@ -130,10 +130,10 @@ class TRTMainWidget(TRTAbstractWidget):
 		
 		self._tree_trims.add_text_row([
 			info.media_pool_name,
-			format_timecode_as_duration(info.runtime_range.duration),
+			formatting.format_timecode_as_duration(info.runtime_range.duration),
 			info.formatted_lfoa(),
-			format_timecode_as_duration(info.trimmed_from_head),
-			format_timecode_as_duration(info.trimmed_from_tail),
+			formatting.format_timecode_as_duration(info.trimmed_from_head),
+			formatting.format_timecode_as_duration(info.trimmed_from_tail),
 		])
 
 	def clear_trim_info(self):

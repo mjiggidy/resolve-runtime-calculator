@@ -5,7 +5,7 @@ Trim info for a given clip.  Data model element.
 import dataclasses
 import timecode
 
-from .formatting import format_frame_count_as_footage
+from resolvecommon import formatting
 
 FFOA_MARKER_NAME:str = "ffoa"
 LFOA_MARKER_NAME:str = "lfoa"
@@ -122,7 +122,7 @@ class TRTTrimInfo:
 			return ""
 		
 		ffoa_frame = self.trimmed_from_head
-		return format_frame_count_as_footage(ffoa_frame.frame_number, frames_per_foot)
+		return formatting.format_frame_count_as_footage(ffoa_frame.frame_number, frames_per_foot)
 	
 	def formatted_lfoa(self, frames_per_foot:int=16) -> str:
 		"""LFOA formatted as feet+frames"""
@@ -132,4 +132,4 @@ class TRTTrimInfo:
 			return ""
 		
 		lfoa_frame = self._runtime_range.end - self._timecode_range.start - 1
-		return format_frame_count_as_footage(lfoa_frame.frame_number, frames_per_foot)
+		return formatting.format_frame_count_as_footage(lfoa_frame.frame_number, frames_per_foot)

@@ -1,7 +1,7 @@
 import timecode
 from resolvecommon.session import resolve
 
-from ..utils import formatting
+from resolvecommon import formatting
 
 class TRTTimecodeInputController:
 	"""Make a LineEdit be a little timecode/duration input thingy"""
