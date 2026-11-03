@@ -1,14 +1,14 @@
 import logging, sys
 
 from .app import appcontroller
-from .utils import paths, logs, user_config
+from .utils import logs, user_config
 from .mainwindow import wnd_main
 
-from resolvecommon.session import resolve
+from resolvecommon import userpaths
 from . import ui, dispatcher
 
 # User locations, macOS only
-PATH_USER_BASE = paths.get_user_base_path()
+PATH_USER_BASE = userpaths.get_user_base_path() / "GlowingPixel" / "Resolve Runtime Calculator"
 PATH_CFG_USER  = PATH_USER_BASE / "config" / "user_config.json"
 PATH_LOG_USER  = PATH_USER_BASE / "logs" / "user_logs.log"
 
