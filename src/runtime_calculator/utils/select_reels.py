@@ -10,29 +10,24 @@ from ..utils import match_info
 
 if typing.TYPE_CHECKING:
 	import DaVinciResolveScript as dvrtypes
-	resolve:dvrtypes.Resolve
 	
 type ParsedVersion = list[str,int]
 """Parsed, comparible version string"""
 
 EMPTY_PART:str = ""
 
-pm   = resolve.GetProjectManager()
-proj = pm.GetCurrentProject()
-mp   = proj.GetMediaPool()
-
-def refresh_project():
+def refresh_project(current_media_pool:dvrtypes.MediaPool):
 
 	logging.getLogger(__name__).info("Refreshing folders...")
-	mp.RefreshFolders()
+	current_media_pool.RefreshFolders()
 
-def get_latest_from_project(match_options:match_info.TRTLatestMatchOptions) -> list[dvrtypes.MediaPoolItem]:
+def get_latest_from_project(current_media_pool:dvrtypes.MediaPool, match_options:match_info.TRTLatestMatchOptions) -> list[dvrtypes.MediaPoolItem]:
 	"""Determine the latest things"""
 
 	latest_per_part:dict[str, list[tuple[ParsedVersion, dvrtypes.MediaPoolItem]]] = dict()
 
-	base_folder   = folders.get_folder_from_path(match_options.match_path, mp.GetRootFolder())  if match_options.match_path else mp.GetRootFolder()
-	ignore_folder = folders.get_folder_from_path(match_options.ignore_path, mp.GetRootFolder()) if match_options.ignore_path else None
+	base_folder   = folders.get_folder_from_path(match_options.match_path, current_media_pool.GetRootFolder())  if match_options.match_path else current_media_pool.GetRootFolder()
+	ignore_folder = folders.get_folder_from_path(match_options.ignore_path, current_media_pool.GetRootFolder()) if match_options.ignore_path else None
 
 	for item in folders.get_clips_from_folder(base_folder, recursive=True, ignore_folder=ignore_folder):
 
@@ -65,13 +60,13 @@ def get_latest_from_project(match_options:match_info.TRTLatestMatchOptions) -> l
 
 	return [item[1] for items in latest_per_part.values() for item in items]
 
-def get_selected_media_pool_items() -> list[dvrtypes.MediaPoolItem]:
+def get_selected_media_pool_items(current_media_pool:dvrtypes.MediaPool) -> list[dvrtypes.MediaPoolItem]:
 	"""Return selected media pool clips"""
 	
-	return mp.GetSelectedClips() or []
+	return current_media_pool.GetSelectedClips() or []
 
-def focus_media_pool_item(media_pool_item:object):
+def focus_media_pool_item(current_media_pool:dvrtypes.MediaPool, media_pool_item:object):
 	"""Select a given media pool item"""
 
-	if not mp.SetSelectedClip(media_pool_item):
+	if not current_media_pool.SetSelectedClip(media_pool_item):
 		raise RuntimeError(f"Could not focus {media_pool_item.GetName()}")

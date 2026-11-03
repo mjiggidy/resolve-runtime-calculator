@@ -2,23 +2,31 @@
 Main app controller for the main window widget
 """
 
-import logging
+from __future__ import annotations
+
+import logging, typing
 
 from . import eventdispatcher, wnd_main
 from ..utils import trim_info, match_info, marker_info, select_reels
 
 from resolvecommon import formatting
 
+if typing.TYPE_CHECKING:
+	import DaVinciResolveScript as dvrtypes
+
 class TRTMainWindowController:
 	"""Main application window controller"""
 
 	def __init__(self,
-		main_widget   :wnd_main.TRTMainWidget,
+	    project_manager :dvrtypes.Resolve,
+		main_widget     :wnd_main.TRTMainWidget,
 		/,
-		match_options :match_info.TRTLatestMatchOptions,
-		trim_options  :trim_info.TRTTrimOptions,
-		marker_options:marker_info.TRTMarkerOptions
+		match_options   :match_info.TRTLatestMatchOptions,
+		trim_options    :trim_info.TRTTrimOptions,
+		marker_options  :marker_info.TRTMarkerOptions
 	):
+
+		self._project_manager = project_manager
 
 		self._main_widget = main_widget
 		"""Main window widget"""
@@ -97,12 +105,12 @@ class TRTMainWindowController:
 			self._reel_info_list.pop()
 			raise e
 		
-		self._main_widget.add_timeline_info(trimmed_item_info)
+		self.add_timeline_info(trimmed_item_info)
 
 	def remove_trimmed_item_index(self, index:int):
 		"""Remove trimfo from list and tree"""
 
-		self._main_widget.set_busy("Removing...")
+		self.set_busy("Removing...")
 
 		try:
 			self._main_widget.tree_results().tree().TakeTopLevelItem(index)
@@ -112,7 +120,7 @@ class TRTMainWindowController:
 
 		self.refresh_total_runtime()
 
-		self._main_widget.set_ready(f"{len(self._reel_info_list)} Item{'' if len(self._reel_info_list) == 1 else 's'}")
+		self.set_ready(f"{len(self._reel_info_list)} Item{'' if len(self._reel_info_list) == 1 else 's'}")
 
 	def refresh_total_runtime(self):
 		"""Refresh TRT calculation"""
@@ -127,14 +135,14 @@ class TRTMainWindowController:
 
 		logging.getLogger(__name__).info("Clearing reel info")
 
-		self._main_widget.set_busy("Clearing...")
+		self.set_busy("Clearing...")
 
 		self._reel_info_list.clear()
 
-		self._main_widget.clear_trim_info()
+		self.clear_trim_info()
 		self._main_widget.summary_display().set_total_runtime()
 
-		self._main_widget.set_ready("Cleared")
+		self.set_ready("Cleared")
 
 	def add_latest_reels(self):
 		
@@ -142,10 +150,10 @@ class TRTMainWindowController:
 
 		if self._match_options.refresh_project:
 
-			self._main_widget.set_busy("Refreshing project...")
-			select_reels.refresh_project()
+			self.set_busy("Refreshing project...")
+			select_reels.refresh_project(self._project_manager.GetCurrentProject().GetMediaPool())
 
-		self._main_widget.set_busy("Finding latest...")
+		self.set_busy("Finding latest...")
 
 		trim_options = self.main_window_widget().trim_controls().trim_options()
 		status_messages = []
@@ -154,7 +162,7 @@ class TRTMainWindowController:
 		skipped_reels = []
 
 		try:
-			latest_reels = select_reels.get_latest_from_project(self._match_options)
+			latest_reels = select_reels.get_latest_from_project(self._project_manager.GetCurrentProject().GetMediaPool(), self._match_options)
 
 		except Exception as e:
 			
@@ -170,7 +178,7 @@ class TRTMainWindowController:
 
 			item_current += 1
 			
-			self._main_widget.set_busy(f"Calculating trims ({item_current}/{item_total})...")
+			self.set_busy(f"Calculating trims ({item_current}/{item_total})...")
 
 			try:
 				self.add_trimmed_item_info(trim_info.TRTTrimInfo(clip, trim_options))
@@ -186,21 +194,21 @@ class TRTMainWindowController:
 		if skipped_reels:
 			status_messages.append(f"Skipped {len(skipped_reels)}")
 
-		self._main_widget.set_ready(", ".join(status_messages))
+		self.set_ready(", ".join(status_messages))
 
 	def add_selected_reels(self):
 		
 		logging.getLogger(__name__).info("Selected reels requested")
 
 
-		self._main_widget.set_busy("Loading selected...")
+		self.set_busy("Loading selected...")
 
 		trim_options = self.main_window_widget().trim_controls().trim_options()
 
 		trimmed_reels:list[trim_info.TRTTrimInfo] = []
 		skipped_reels = []
 
-		for clip in select_reels.get_selected_media_pool_items():
+		for clip in select_reels.get_selected_media_pool_items(self._project_manager.GetCurrentProject().GetMediaPool()):
 
 			try:
 				trimmed_reels.append(trim_info.TRTTrimInfo(clip, trim_options))
@@ -218,7 +226,7 @@ class TRTMainWindowController:
 		if skipped_reels:
 			status_messages.append(f"Skipped {len(skipped_reels)}")
 
-		self._main_widget.set_ready(", ".join(status_messages))
+		self.set_ready(", ".join(status_messages))
 
 	def remove_selected_trim_items(self):
 		"""Handle key release events"""
@@ -242,7 +250,7 @@ class TRTMainWindowController:
 			item_index = self._main_widget.tree_results().item_index(tree_item)
 			trim_info = self._reel_info_list[item_index]
 
-			select_reels.focus_media_pool_item(trim_info.media_pool_item)
+			select_reels.focus_media_pool_item(self._project_manager.GetCurrentProject().GetMediaPool(), trim_info.media_pool_item)
 
 		except Exception as e:
 			logging.getLogger(__name__).error("Error focusing media pool item: %s", e, exc_info=True)
@@ -308,7 +316,7 @@ class TRTMainWindowController:
 		
 		logging.getLogger(__name__).debug("Writing results to path: %s", chosen_path)
 
-		self._main_widget.set_busy()
+		self.set_busy()
 
 		try:
 			trt = formatting.format_timecode_as_duration(sum(r.runtime_range.duration for r in self._reel_info_list)) if self._reel_info_list else "0:00"
@@ -319,8 +327,50 @@ class TRTMainWindowController:
 
 		except Exception as e:
 			logging.getLogger(__name__).error("Error writing results: %s", e, exc_info=True)
-			self._main_widget.set_ready("Error exporting!  See logs.")
+			self.set_ready("Error exporting!  See logs.")
 
 		else:
 			logging.getLogger(__name__).info("Succesfully wrote results to: %s", chosen_path)
-			self._main_widget.set_ready("CSV exported successfully")
+			self.set_ready("CSV exported successfully")
+
+	## NEW ###
+
+	def set_busy(self, status_message:str|None=None):
+		"""Set window state to busy"""
+
+		self._main_widget._list_controls().set_enabled(False)
+		self._main_widget.trim_controls().set_enabled(False)
+		self._main_widget.export_button().Enabled = False
+
+		if status_message is not None:
+			self._main_widget.summary_display().set_status_message(status_message)
+
+	def set_ready(self, status_message:str|None=None):
+		"""Set window state to ready"""
+
+		self._main_widget.trim_controls().set_enabled(True)
+
+		# Enable export/clear buttons if the tree is populated
+		tree_is_populated = not self._main_widget.tree_results().is_empty()
+		self._main_widget.tree_list_controls().set_enabled(True, tree_is_populated)
+		self._main_widget.export_button().Enabled = tree_is_populated
+
+		if status_message is not None:
+			self._main_widget.summary_display().set_status_message(status_message)
+	
+	def add_timeline_info(self, info:trim_info.TRTTrimInfo):
+		"""Add reel info to the tree"""
+		
+		self._main_widget.tree_results().add_text_row([
+			info.media_pool_name,
+			formatting.format_timecode_as_duration(info.runtime_range.duration),
+			info.formatted_lfoa(),
+			formatting.format_timecode_as_duration(info.trimmed_from_head),
+			formatting.format_timecode_as_duration(info.trimmed_from_tail),
+		])
+
+	def clear_trim_info(self):
+		"""Clear all trim info"""
+		
+		self._main_widget.tree_results().clear()
+

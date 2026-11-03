@@ -1,15 +1,20 @@
-import logging
-
-from .. import dispatcher, ui
+from __future__ import annotations
+import logging, typing
 
 from ..mainwindow import wnd_main, mainwindowcontroller
 from ..settingseditor import settingscontroller, wnd_settings
 from ..utils import trim_info, marker_info, match_info, window_info
 
+if typing.TYPE_CHECKING:
+	import DaVinciResolveScript as dvrtypes
+
 class TRTApplicationController:
 
 	def __init__(
 		self,
+		bmd:object,
+		resolve:dvrtypes.Resolve,
+		fusion:dvrtypes.Fusion,
 		/,
 		match_options :match_info.TRTLatestMatchOptions,
 		trim_options  :trim_info.TRTTrimOptions,
@@ -17,21 +22,25 @@ class TRTApplicationController:
 		window_options:window_info.TRTMainWindowOptions,
 	):
 
+		self._ui_dispatcher = bmd.UIDispatcher(fusion.UIManager)
+
 		# Main Window
 
 		self._main_widget     = wnd_main.TRTMainWidget(
-			ui,
+			resolve.GetProjectManager(),
+			fusion.UIManager,
 			show_nag_link=window_options.show_nag_link
 		)
 
 		self._main_controller = mainwindowcontroller.TRTMainWindowController(
+			resolve.GetProjectManager(),
 			self._main_widget,
 			match_options=match_options,
 			trim_options=trim_options,
 			marker_options=marker_options,
 		)
 		
-		self._main_window = dispatcher.AddWindow({
+		self._main_window = self._ui_dispatcher.AddWindow({
 			"ID": wnd_main.ID_WINDOW_MAIN,
 			"WindowTitle": window_options.main_window_title,
 			"FixedSize": [360,500],
@@ -45,9 +54,9 @@ class TRTApplicationController:
 
 		# Settings Window
 
-		self._settings_widget        = wnd_settings.TRTSettingsWindow(ui)
-		self._settings_controller    = settingscontroller.TRTSettingsController(self._settings_widget)
-		self._settings_window = dispatcher.AddWindow({
+		self._settings_widget        = wnd_settings.TRTSettingsWindow(fusion.UIManager)
+		self._settings_controller    = settingscontroller.TRTSettingsController(resolve.GetProjectManager(), self._settings_widget)
+		self._settings_window = self._ui_dispatcher.AddWindow({
 			"ID": wnd_settings.ID_WINDOW_SETTINGS,
 			"WindowTitle": "Settings",
 			"FixedSize": [420,350],
@@ -63,14 +72,14 @@ class TRTApplicationController:
 		
 		self._main_window.Show()
 
-		dispatcher.RunLoop()
+		self._ui_dispatcher.RunLoop()
 
 	# Events handlings
 
 	def _on_mainwindow_close(self, event:dict):
 
 		logging.getLogger(__name__).debug("Window is closing.  And hey -- thanks.")
-		dispatcher.ExitLoop(0)
+		self._ui_dispatcher.ExitLoop(0)
 
 	def _on_settings_requested(self, event:dict):
 

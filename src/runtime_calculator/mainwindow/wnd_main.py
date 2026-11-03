@@ -1,11 +1,13 @@
 """
 Main window GUI
 """
+from __future__ import annotations
 
+import typing
 
 from .tree_results import TRTTreeResults
-from .panel_treecontrols import TRTTreeControls
-from .panel_trimoptions import TRTTrimOptionsEditor
+from .panel_treecontrols import TRTTreeControlsWidget
+from .panel_trimoptions import TRTTrimOptionsWidget
 from .panel_summary import TRTSummaryPanel
 from .panel_about import TRTAboutPanel
 
@@ -14,6 +16,9 @@ from ..utils.trim_info import TRTTrimInfo
 from .. import __version__
 
 from resolvecommon import formatting
+
+if typing.TYPE_CHECKING:
+	import DaVinciResolveScript as dvrtypes
 
 
 DEFAULT_WINDOW_TITLE = "Runtime Calculator"
@@ -29,13 +34,13 @@ class TRTMainWidget(TRTAbstractWidget):
 	"""Main window widget"""
 	
 	def __init__(self,
-		ui_manager:object, /, show_nag_link:bool = True):
+		project_manager:dvrtypes.ProjectManager, ui_manager:object, /, show_nag_link:bool = True):
 		
 		self._ui = ui_manager
 
-		self._trim_controls = TRTTrimOptionsEditor(self._ui)
+		self._trim_controls = TRTTrimOptionsWidget(project_manager, self._ui)
 
-		self._list_controls = TRTTreeControls(self._ui)
+		self._list_controls = TRTTreeControlsWidget(self._ui)
 
 		self._tree_trims = TRTTreeResults(self._ui)
 		self._tree_trims.tree().ColumnWidth[0] = 150
@@ -92,7 +97,7 @@ class TRTMainWidget(TRTAbstractWidget):
 		
 		return self._tree_trims
 
-	def trim_controls(self) -> TRTTrimOptionsEditor:
+	def trim_controls(self) -> TRTTrimOptionsWidget:
 		"""The Trim Options editor"""
 
 		return self._trim_controls
@@ -102,42 +107,12 @@ class TRTMainWidget(TRTAbstractWidget):
 
 		return self._summary_display
 
-	def set_busy(self, status_message:str|None=None):
-		"""Set window state to busy"""
+	def tree_list_controls(self) -> TRTTreeControlsWidget:
+		"""Return the add/clear button things"""
 
-		self._list_controls.set_enabled(False)
-		self._trim_controls.set_enabled(False)
-		self._btn_export.Enabled = False
+		return self._list_controls
 
-		if status_message is not None:
-			self._summary_display.set_status_message(status_message)
+	def export_button(self) -> object:
+		"""The Export button"""
 
-	def set_ready(self, status_message:str|None=None):
-		"""Set window state to ready"""
-
-		self._trim_controls.set_enabled(True)
-
-		# Enable export/clear buttons if the tree is populated
-		tree_is_populated = not self._tree_trims.is_empty()
-		self._list_controls.set_enabled(True, tree_is_populated)
-		self._btn_export.Enabled = tree_is_populated
-
-		if status_message is not None:
-			self._summary_display.set_status_message(status_message)
-	
-	def add_timeline_info(self, info:TRTTrimInfo):
-		"""Add reel info to the tree"""
-		
-		self._tree_trims.add_text_row([
-			info.media_pool_name,
-			formatting.format_timecode_as_duration(info.runtime_range.duration),
-			info.formatted_lfoa(),
-			formatting.format_timecode_as_duration(info.trimmed_from_head),
-			formatting.format_timecode_as_duration(info.trimmed_from_tail),
-		])
-
-	def clear_trim_info(self):
-		"""Clear all trim info"""
-		
-		self._tree_trims.clear()
-
+		return self._btn_export

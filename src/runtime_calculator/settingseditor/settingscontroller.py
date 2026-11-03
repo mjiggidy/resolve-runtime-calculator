@@ -1,13 +1,19 @@
+from __future__ import annotations
+import typing
+import mediapoolinput
+
 from . import wnd_settings
-from ..mediapoolinput  import mediapoolinput
 from ..utils import match_info, marker_info
+
+if typing.TYPE_CHECKING:
+	import DaVinciResolveScript as dvrtypes
 
 DEFAULT_FFOA_MARKER_NAME = "FFOA"
 DEFAULT_LFOA_MARKER_NAME = "LFOA"
 
 class TRTSettingsController:
 
-	def __init__(self, settings_widget:wnd_settings.TRTSettingsWindow):
+	def __init__(self, project_manager:dvrtypes.ProjectManager, settings_widget:wnd_settings.TRTSettingsWindow):
 
 		self._window_widget = settings_widget
 
@@ -15,8 +21,8 @@ class TRTSettingsController:
 		self._window_widget.ffoa_marker_editor().PlaceholderText = DEFAULT_FFOA_MARKER_NAME
 		self._window_widget.lfoa_marker_editor().PlaceholderText = DEFAULT_LFOA_MARKER_NAME
 
-		self._match_mediapool_input_controller   = mediapoolinput.TRTMediaPoolInputController(self._window_widget.match_mediapool_folder_editor())
-		self._exclude_mediapool_input_controller = mediapoolinput.TRTMediaPoolInputController(self._window_widget.exclude_mediapool_folder_editor())
+		self._match_mediapool_input_controller   = mediapoolinput.MPILineEditController(project_manager, self._window_widget.match_mediapool_folder_editor())
+		self._exclude_mediapool_input_controller = mediapoolinput.MPILineEditController(project_manager, self._window_widget.exclude_mediapool_folder_editor())
 
 	def register_window_handle(self, window_handle:object):
 

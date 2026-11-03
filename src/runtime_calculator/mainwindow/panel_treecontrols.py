@@ -4,7 +4,7 @@ ID_BTN_ADD_LATEST   = "btn_add_latest"
 ID_BTN_ADD_SELECTED = "btn_add_selected"
 ID_BTN_CLEAR        = "btn_clear_list"
 
-class TRTTreeControls(TRTAbstractWidget):
+class TRTTreeControlsWidget(TRTAbstractWidget):
 	"""Add/Clear Trim Items"""
 
 	def __init__(self, ui_manager:object):

@@ -1,20 +1,26 @@
+from __future__ import annotations
+import typing
 import timecode
-from resolvecommon.session import resolve
 
 from ..gui.abstract_widget import TRTAbstractWidget
 
 from ..timecodeinput import timecodeinput
 from ..utils import trim_info
 
+if typing.TYPE_CHECKING:
+	import DaVinciResolveScript as dvrtypes
+
 ID_TXT_TRIM_FFOA    = "txt_ffoa"
 ID_TXT_TRIM_LFOA    = "txt_lfoa"
 
-class TRTTrimOptionsEditor(TRTAbstractWidget):
+class TRTTrimOptionsWidget(TRTAbstractWidget):
 	"""View and edit the trim options"""
 
-	def __init__(self, ui_manager:object):
+	def __init__(self, project_manager:dvrtypes.ProjectManager, ui_manager:object):
 
 		super().__init__(ui_manager)
+
+		self._project_manager = project_manager
 
 		self._lbl_trim_head = self._ui.Label({
 			"Weight": 0,
@@ -72,8 +78,8 @@ class TRTTrimOptionsEditor(TRTAbstractWidget):
 			self._chk_use_lfoa_marker,
 		])
 
-		self._ffoa_input_controller = timecodeinput.TRTTimecodeInputController(self._txt_trim_head, allow_negative=False, as_duration=True)
-		self._lfoa_input_controller = timecodeinput.TRTTimecodeInputController(self._txt_trim_tail, allow_negative=False, as_duration=True)
+		self._ffoa_input_controller = timecodeinput.TRTTimecodeInputController(self._project_manager, self._txt_trim_head, allow_negative=False, as_duration=True)
+		self._lfoa_input_controller = timecodeinput.TRTTimecodeInputController(self._project_manager, self._txt_trim_tail, allow_negative=False, as_duration=True)
 
 		timecode_alignment = self._txt_trim_head.GetAlignment()
 		timecode_alignment["AlignLeft"] = False
@@ -108,7 +114,7 @@ class TRTTrimOptionsEditor(TRTAbstractWidget):
 	def trim_options(self) -> trim_info.TRTTrimOptions:
 		"""Collect the currently-set trim options"""
 
-		project_rate = round(resolve.GetProjectManager().GetCurrentProject().GetSetting("timelineFrameRate"))
+		project_rate = round(self._project_manager.GetCurrentProject().GetSetting("timelineFrameRate"))
 
 		return trim_info.TRTTrimOptions(
 			trim_from_head = timecode.Timecode(self.ffoa_trim_text(), rate=project_rate),

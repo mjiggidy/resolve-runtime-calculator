@@ -2,22 +2,15 @@
 import sys, logging
 
 try:
-	from resolvecommon.session import bmd, resolve, fusion
+	import DaVinciResolveScript as bmd
+
 except ImportError as e:
 	print("Cannot find the Davinci Resolve API.  Please ensure Davinci Resolve Studio is installed and operational.", file=sys.stderr)
 	sys.exit(1)
-
-if not resolve:
-	print("Cannot connect to Davinci Resolve Studio.  Please ensure it is running, and has scripting enabled.", file=sys.stderr)
-	sys.exit(2)
-
-if not fusion:
-	print("Cannot connect to Fusion.", file=sys.stderr)
-	sys.exit(3)
 
 if __name__ == "__main__":
 
 	from runtime_calculator import __main__
 
-	__main__.main()
+	__main__.main(bmd=bmd, resolve=bmd.scriptapp("resolve"), fusion=bmd.scriptapp("fusion"))
 

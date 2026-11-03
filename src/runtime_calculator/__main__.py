@@ -1,4 +1,5 @@
-import logging, sys
+from __future__ import annotations
+import logging, sys, typing
 
 from .app import appcontroller
 from .utils import logs, user_config
@@ -7,6 +8,9 @@ from .mainwindow import wnd_main
 from resolvecommon import userpaths
 from . import ui, dispatcher
 
+if typing.TYPE_CHECKING:
+	import DaVinciResolveScript as dvrtypes
+
 # User locations, macOS only
 PATH_USER_BASE = userpaths.get_user_base_path() / "GlowingPixel" / "Resolve Runtime Calculator"
 PATH_CFG_USER  = PATH_USER_BASE / "config" / "user_config.json"
@@ -14,7 +18,7 @@ PATH_LOG_USER  = PATH_USER_BASE / "logs" / "user_logs.log"
 
 RESOLVE_MINIMUM_VERSION = [21,0,4]
 
-def main():
+def main(bmd:object, resolve:dvrtypes.Resolve, fusion:dvrtypes.Fusion):
 
 	# If an instance is already running (window is registered with UIDispatcher), 
 	# just raise the existing window and get the heck outta there buddy.
@@ -46,6 +50,9 @@ def main():
 	user_config_manager = user_config.ConfigFileManager(PATH_CFG_USER)
 
 	app = appcontroller.TRTApplicationController(
+		bmd,
+		resolve,
+		fusion,
 		match_options  = user_config_manager.match_options(),
 		trim_options   = user_config_manager.trim_options(),
 		marker_options = user_config_manager.marker_options(),

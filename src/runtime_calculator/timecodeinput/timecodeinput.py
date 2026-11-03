@@ -1,19 +1,24 @@
-import timecode
-from resolvecommon.session import resolve
+from __future__ import annotations
+import typing
 
+import timecode
 from resolvecommon import formatting
+
+if typing.TYPE_CHECKING:
+	import DaVinciResolveScript as dvrtypes
 
 class TRTTimecodeInputController:
 	"""Make a LineEdit be a little timecode/duration input thingy"""
 
-	def __init__(self, line_edit:object, /, as_duration:bool=False, allow_negative:bool=True, placeholder_tc:timecode.Timecode|None=None):
+	def __init__(self, project_manager:dvrtypes.ProjectManager, line_edit:object, /, as_duration:bool=False, allow_negative:bool=True, placeholder_tc:timecode.Timecode|None=None):
 
+		self._project_manager = project_manager
 		self._line_edit = line_edit
 
 		self._allow_negative = allow_negative
 		self._as_duration    = as_duration
 
-		project_rate = round(resolve.GetProjectManager().GetCurrentProject().GetSetting("timelineFrameRate"))
+		project_rate = round(self._project_manager.GetCurrentProject().GetSetting("timelineFrameRate"))
 
 		placeholder_tc   = placeholder_tc or timecode.Timecode(0, rate=project_rate)
 		placeholder_text = formatting.format_timecode_as_duration(placeholder_tc) if as_duration else str(placeholder_tc)
@@ -28,7 +33,7 @@ class TRTTimecodeInputController:
 	def set_from_string(self, timecode_string:str):
 		"""Set the LineEdit text from a timecode string"""
 
-		project_rate = round(resolve.GetProjectManager().GetCurrentProject().GetSetting("timelineFrameRate"))
+		project_rate = round(self._project_manager.GetCurrentProject().GetSetting("timelineFrameRate"))
 
 		try:
 			tc_from_string = formatting.format_string_as_timecode(timecode_string, timecode_rate=project_rate)
