@@ -1,10 +1,4 @@
-from __future__ import annotations
-import typing
-
 from ..gui.abstract_widget import TRTAbstractWidget
-
-if typing.TYPE_CHECKING:
-	import DaVinciResolveScript as dvrtypes
 
 ID_TXT_TRIM_FFOA    = "txt_ffoa"
 ID_TXT_TRIM_LFOA    = "txt_lfoa"
