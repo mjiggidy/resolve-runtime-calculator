@@ -13,10 +13,7 @@ from .panel_summary import TRTSummaryPanel
 from .panel_about import TRTAboutPanel
 
 from ..gui.abstract_widget import TRTAbstractWidget
-from ..utils.trim_info import TRTTrimInfo
 from .. import __version__
-
-from resolvecommon import formatting
 
 if typing.TYPE_CHECKING:
 	import DaVinciResolveScript as dvrtypes
