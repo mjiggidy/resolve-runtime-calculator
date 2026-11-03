@@ -5,10 +5,8 @@ Deals with selecting reels.  Only gonna work for meeeee for now!
 from __future__ import annotations
 import logging, typing
 
-from .folders import get_folder_from_path, get_clips_from_folder
-from ..utils import match_info, formatting
-
-from resolvecommon.session import resolve
+from resolvecommon import folders, formatting
+from ..utils import match_info
 
 if typing.TYPE_CHECKING:
 	import DaVinciResolveScript as bmd
@@ -33,10 +31,10 @@ def get_latest_from_project(match_options:match_info.TRTLatestMatchOptions) -> l
 
 	latest_per_part:dict[str, list[tuple[ParsedVersion, bmd.MediaPoolItem]]] = dict()
 
-	base_folder   = get_folder_from_path(match_options.match_path, mp.GetRootFolder())  if match_options.match_path else mp.GetRootFolder()
-	ignore_folder = get_folder_from_path(match_options.ignore_path, mp.GetRootFolder()) if match_options.ignore_path else None
+	base_folder   = folders.get_folder_from_path(match_options.match_path, mp.GetRootFolder())  if match_options.match_path else mp.GetRootFolder()
+	ignore_folder = folders.get_folder_from_path(match_options.ignore_path, mp.GetRootFolder()) if match_options.ignore_path else None
 
-	for item in get_clips_from_folder(base_folder, recursive=True, ignore_folder=ignore_folder):
+	for item in folders.get_clips_from_folder(base_folder, recursive=True, ignore_folder=ignore_folder):
 
 		match = match_options.match_pattern.search(item.GetName())
 
