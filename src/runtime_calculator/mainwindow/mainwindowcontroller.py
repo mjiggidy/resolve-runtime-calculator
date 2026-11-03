@@ -253,7 +253,31 @@ class TRTMainWindowController:
 	def export_results(self):
 		"""Export results to a file or somethin'"""
 
-		from resolvecommon.session import resolve, fusion
+		# NOTE: Just for now I'mma put this here...
+		def format_trim_list_to_csv(trim_list:list[trim_info.TRTTrimInfo]) -> str:
+
+			from io import StringIO
+			import csv
+
+			headers = ["Name", "Runtime", "LFOA", "Trimmed From Head", "Trimmed From Tail"]
+
+			str_buffer = StringIO()
+
+			csv_writer = csv.DictWriter(str_buffer, headers, lineterminator="\n")
+			csv_writer.writeheader()
+
+			for trim_info in trim_list:
+
+				csv_writer.writerow({
+					"Name":    trim_info.media_pool_name,
+					"Runtime": formatting.format_timecode_as_duration(trim_info.runtime_range.duration),
+					"LFOA":    trim_info.formatted_lfoa(),
+					"Trimmed From Head": formatting.format_timecode_as_duration(trim_info.trimmed_from_head),
+					"Trimmed From Tail": formatting.format_timecode_as_duration(trim_info.trimmed_from_tail),
+				})
+
+			return str_buffer.getvalue()
+		
 		import pathlib, re
 
 		logging.getLogger(__name__).debug("Requesting file output location")
@@ -291,7 +315,7 @@ class TRTMainWindowController:
 			trt = formatting.format_timecode_as_duration(sum(r.runtime_range.duration for r in self._reel_info_list)) if self._reel_info_list else "0:00"
 			with open(chosen_path, "w", encoding="utf-8") as handle_export:
 
-				print(formatting.format_trim_list_to_csv(self._reel_info_list), file=handle_export)
+				print(format_trim_list_to_csv(self._reel_info_list), file=handle_export)
 				print("Total Runtime: " + trt, file=handle_export)
 
 		except Exception as e:
