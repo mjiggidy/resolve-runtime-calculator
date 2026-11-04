@@ -111,8 +111,8 @@ class TRTApplicationController:
 
 	def marker_options(self) -> marker_info.TRTMarkerOptions:
 
-		return self._settings_controller.marker_options()
+		return self._main_controller.marker_options()
 
 	def match_options(self) -> match_info.TRTLatestMatchOptions:
 
-		return self._settings_controller.match_options()
+		return self._main_controller.match_options()
