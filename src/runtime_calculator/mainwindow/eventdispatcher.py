@@ -16,6 +16,9 @@ from . import panel_treecontrols
 if typing.TYPE_CHECKING:
 	from .mainwindowcontroller import TRTMainWindowController
 
+SECRET_MODIFIER = "AltModifier"
+"""Which event modifier does the alternative stuff"""
+
 class TRTEventDispatcher:
 	"""Dispatch events to the controller"""
 
@@ -43,7 +46,7 @@ class TRTEventDispatcher:
 
 		logging.getLogger(__name__).debug("Got clear reels event.  Modifiers: %s", str(event.get("modifiers",{})))
 
-		if event.get("modifiers",{}).get("ControlModifier",False):
+		if event["modifiers"][SECRET_MODIFIER]:
 			self._controller.remove_selected_trim_items()
 
 		else:
@@ -54,7 +57,7 @@ class TRTEventDispatcher:
 		
 		logging.getLogger(__name__).debug("Got add-latest event.  Modifiers: %s", str(event.get("modifiers",{})))
 
-		if event.get("modifiers",{}).get("ControlModifier",False):
+		if event["modifiers"][SECRET_MODIFIER]:
 			self._controller.clear_all()
 			
 		self._controller.add_latest_reels()
@@ -64,7 +67,7 @@ class TRTEventDispatcher:
 		
 		logging.getLogger(__name__).debug("Got add-selected event.   Modifiers: %s", str(event.get("modifiers",{})))
 
-		if event["modifiers"]["ControlModifier"]:
+		if event["modifiers"][SECRET_MODIFIER]:
 			self._controller.clear_all()
 
 		self._controller.add_selected_reels()
