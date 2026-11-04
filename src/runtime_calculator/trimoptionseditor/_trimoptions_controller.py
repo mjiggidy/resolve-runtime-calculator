@@ -6,7 +6,7 @@ from ..utils import trim_info
 from ..timecodeinput import timecodeinput
 
 if typing.TYPE_CHECKING:
-	from .panel_trimoptions import TRTTrimOptionsWidget
+	from ._widget import TRTTrimOptionsWidget
 	import DaVinciResolveScript as dvrtypes
 
 class TRTTrimOptionsController:

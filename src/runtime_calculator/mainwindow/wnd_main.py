@@ -7,17 +7,16 @@ import typing
 
 from .tree_results import TRTTreeResults
 from .panel_treecontrols import TRTTreeControlsWidget
-from .panel_trimoptions import TRTTrimOptionsWidget
-from .controller_trimoptions import TRTTrimOptionsController
-from .panel_summary import TRTSummaryPanel
 from .panel_about import TRTAboutPanel
+from .panel_summary import TRTSummaryPanel
+
+from ..trimoptionseditor import TRTTrimOptionsWidget, TRTTrimOptionsController
 
 from ..gui.abstract_widget import TRTAbstractWidget
 from .. import __version__
 
 if typing.TYPE_CHECKING:
 	import DaVinciResolveScript as dvrtypes
-
 
 DEFAULT_WINDOW_TITLE = "Runtime Calculator"
 

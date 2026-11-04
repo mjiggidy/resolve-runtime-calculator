@@ -2,7 +2,7 @@ from __future__ import annotations
 import typing
 import mediapoolinput
 
-from . import wnd_settings
+from . import _settings_widget
 from ..utils import match_info, marker_info
 
 if typing.TYPE_CHECKING:
@@ -13,7 +13,7 @@ DEFAULT_LFOA_MARKER_NAME = "LFOA"
 
 class TRTSettingsController:
 
-	def __init__(self, project_manager:dvrtypes.ProjectManager, settings_widget:wnd_settings.TRTSettingsWindow):
+	def __init__(self, project_manager:dvrtypes.ProjectManager, settings_widget:_settings_widget.TRTSettingsWindow):
 
 		self._window_widget = settings_widget
 
@@ -26,10 +26,10 @@ class TRTSettingsController:
 
 	def register_window_handle(self, window_handle:object):
 
-		window_handle.On[wnd_settings.ID_WINDOW_SETTINGS].Close          = self._on_close
-		window_handle.On[wnd_settings.ID_TXT_MATCH_NAME].TextChanged     = self._on_match_name_changed
-		window_handle.On[wnd_settings.ID_TXT_MATCH_FOLDER].TextChanged   = self._on_match_folder_changed
-		window_handle.On[wnd_settings.ID_TXT_EXCLUDE_FOLDER].TextChanged = self._on_exclude_folder_changed
+		window_handle.On[self._window_widget.id()].Close          = self._on_close
+		window_handle.On[self._window_widget.match_mediapool_name_editor().ID].TextChanged     = self._on_match_name_changed
+		window_handle.On[self._window_widget.match_mediapool_folder_editor()().ID].TextChanged = self._on_match_folder_changed
+		window_handle.On[self._window_widget.exclude_mediapool_folder_editor().ID].TextChanged = self._on_exclude_folder_changed
 
 		self._match_mediapool_input_controller.register_window_handle(window_handle)
 		self._exclude_mediapool_input_controller.register_window_handle(window_handle)

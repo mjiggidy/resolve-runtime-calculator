@@ -1,0 +1,2 @@
+from ._settings_widget import TRTSettingsWindow
+from ._settings_controller import TRTSettingsController

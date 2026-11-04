@@ -139,6 +139,11 @@ class TRTSettingsWindow(TRTAbstractWidget):
 			"Text": "Cancel",
 		})
 
+	def id(self) -> str:
+
+		# TODO: Differently lol
+		return ID_WINDOW_SETTINGS
+
 	def match_mediapool_name_editor(self) -> object:
 		"""Return the name pattern LineEdit"""
 
@@ -183,6 +188,14 @@ class TRTSettingsWindow(TRTAbstractWidget):
 		"""Return the `LineEdit` for the LFOA marker name"""
 
 		return self._txt_lfoa_name
+
+	def save_button(self) -> object:
+
+		return self._btn_save
+
+	def cancel_button(self) -> object:
+
+		return self._btn_cancel
 
 	def layout(self):
 

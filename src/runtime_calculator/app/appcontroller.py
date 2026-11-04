@@ -2,7 +2,7 @@ from __future__ import annotations
 import logging, typing
 
 from ..mainwindow import wnd_main, mainwindowcontroller
-from ..settingseditor import settingscontroller, wnd_settings
+from ..settingseditor import TRTSettingsWindow, TRTSettingsController
 from ..utils import trim_info, marker_info, match_info, window_info
 
 if typing.TYPE_CHECKING:
@@ -55,17 +55,17 @@ class TRTApplicationController:
 
 		# Settings Window
 
-		self._settings_widget        = wnd_settings.TRTSettingsWindow(fusion.UIManager)
-		self._settings_controller    = settingscontroller.TRTSettingsController(resolve.GetProjectManager(), self._settings_widget)
+		self._settings_widget        = TRTSettingsWindow(fusion.UIManager)
+		self._settings_controller    = TRTSettingsController(resolve.GetProjectManager(), self._settings_widget)
 		self._settings_window = self._ui_dispatcher.AddWindow({
-			"ID": wnd_settings.ID_WINDOW_SETTINGS,
+			"ID": self._settings_widget.id(),
 			"WindowTitle": "Settings",
 			"FixedSize": [420,350],
 			"Events": {"Close": True},
 		}, [self._settings_widget.layout()])
 
-		self._settings_window.On[wnd_settings.ID_BTN_SAVE].Clicked   = self._on_settings_saved
-		self._settings_window.On[wnd_settings.ID_BTN_CANCEL].Clicked = self._on_settings_cancel
+		self._settings_window.On[self._settings_widget.save_button().ID].Clicked   = self._on_settings_saved
+		self._settings_window.On[self._settings_widget.cancel_button().ID].Clicked = self._on_settings_cancel
 
 		self._settings_controller.register_window_handle(self._settings_window)
 
