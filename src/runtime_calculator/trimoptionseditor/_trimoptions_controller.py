@@ -3,10 +3,10 @@ import typing
 import timecode
 
 from ..utils import trim_info
-from ..timecodeinput import timecodeinput
+from timecodeinput import TimecodeInputController
 
 if typing.TYPE_CHECKING:
-	from ._widget import TRTTrimOptionsWidget
+	from . import TRTTrimOptionsWidget
 	import DaVinciResolveScript as dvrtypes
 
 class TRTTrimOptionsController:
@@ -17,13 +17,13 @@ class TRTTrimOptionsController:
 		self._project_manager = project_manager
 		self._widget = trim_options_widget
 
-		self._ffoa_input_controller = timecodeinput.TRTTimecodeInputController(
+		self._ffoa_input_controller = TimecodeInputController(
 			self._project_manager,
 			self._widget.trim_head_input(),
 			allow_negative=False,
 			as_duration=True
 		)
-		self._lfoa_input_controller = timecodeinput.TRTTimecodeInputController(
+		self._lfoa_input_controller = TimecodeInputController(
 			self._project_manager,
 			self._widget.trim_tail_input(),
 			allow_negative=False,
