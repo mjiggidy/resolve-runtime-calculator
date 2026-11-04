@@ -99,10 +99,10 @@ class TRTTrimOptionsController:
 
 		self._widget.use_lfoa_checkbox().Checked = use_marker
 
-	def ffoa_input_controller(self) -> timecodeinput.TRTTimecodeInputController:
+	def ffoa_input_controller(self) -> TimecodeInputController:
 
 		return self._ffoa_input_controller
 
-	def lfoa_input_controller(self) -> timecodeinput.TRTTimecodeInputController:
+	def lfoa_input_controller(self) -> TimecodeInputController:
 
 		return self._lfoa_input_controller
