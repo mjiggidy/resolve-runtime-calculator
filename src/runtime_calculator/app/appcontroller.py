@@ -96,7 +96,7 @@ class TRTApplicationController:
 		self._main_controller.set_marker_options(self._settings_controller.marker_options())
 
 		self._settings_window.Hide()
-		print(self._settings_controller.marker_options())
+		#print(self._settings_controller.marker_options())
 
 	def _on_settings_cancel(self, event:dict):
 
