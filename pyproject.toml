@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "resolve-runtime-calculator"
-version = "0.9.0"
+version = "0.10.0"
 description = "Runtime calculator for Davinci Resolve"
 readme = "README.md"
 requires-python = ">=3.13"
@@ -13,10 +13,10 @@ authors = [
     { name = "Michael Jordan", email = "michael@glowingpixel.com" }
 ]
 dependencies = [
-    "resolve-common @ git+https://github.com/mjiggidy/resolve_common.git@v0.2",
+    "resolve-common @ git+https://github.com/mjiggidy/resolve_common.git@v0.3",
     "timecode @ git+https://github.com/mjiggidy/timecode.git@v1.0.0",
-    "resolve-ui-mediapool-input @ git+https://github.com/mjiggidy/resolve-ui-mediapool-input.git@v0.1",
-    "resolve-ui-timecode-input @ git+https://github.com/mjiggidy/resolve-ui-timecode-input.git@v0.1",
+    "resolve-ui-mediapool-input @ git+https://github.com/mjiggidy/resolve-ui-mediapool-input.git@v0.4",
+    "resolve-ui-timecode-input @ git+https://github.com/mjiggidy/resolve-ui-timecode-input.git@v0.2",
 ]
 
 [tool.setuptools.packages.find]
