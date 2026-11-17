@@ -61,6 +61,7 @@ class TRTApplicationController:
 			"ID": self._settings_widget.id(),
 			"WindowTitle": "Settings",
 			"FixedSize": [420,350],
+			"WindowModality": "ApplicationModal",
 			"Events": {"Close": True},
 		}, [self._settings_widget.layout()])
 
