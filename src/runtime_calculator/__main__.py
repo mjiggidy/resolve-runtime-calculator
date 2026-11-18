@@ -15,7 +15,7 @@ PATH_USER_BASE = userpaths.get_user_data_base_path() / "GlowingPixel" / "Resolve
 PATH_CFG_USER  = PATH_USER_BASE / "config" / "user_config.json"
 PATH_LOG_USER  = PATH_USER_BASE / "logs" / "user_logs.log"
 
-RESOLVE_MINIMUM_VERSION = [21,0,4]
+RESOLVE_MINIMUM_VERSION = [21,2,0]
 
 def main(bmd:object, resolve:dvrtypes.Resolve, fusion:dvrtypes.Fusion):
 
