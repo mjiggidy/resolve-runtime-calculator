@@ -66,14 +66,15 @@ class TRTMainWidget(TRTAbstractWidget):
 		self._btn_settings = self._ui.Button({
 			"ID": ID_BTN_SETTINGS,
 			"Weight": 0,
-			"FixedSize": [16,16],
-			"Text": "⚙︎"
+#			"FixedSize": [16,16],
+			"Text": "Trim && Match Settings"
 		})
 	
 	def layout(self):
 		
 		return self._ui.VGroup([
 			self._trim_controls_widget.layout(),
+			self._btn_settings,
 
 			self._ui.Label({"FrameStyle": 4}),
 
@@ -84,10 +85,7 @@ class TRTMainWidget(TRTAbstractWidget):
 
 			self._ui.Label({"FrameStyle": 4}),
 
-			self._ui.HGroup([
-				self._about_panel.layout(),
-				self._btn_settings
-			]),
+			self._about_panel.layout(),
 		])
 	
 	def tree_results(self) -> TRTTreeResults:
