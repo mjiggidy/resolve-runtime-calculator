@@ -5,11 +5,24 @@ Function(s?) for log setup
 import logging, pathlib
 from os import PathLike
 
+LOG_FORMAT = "[%(asctime)s]\t%(levelname)s\t%(name)s\t%(message)s"
+LOG_FILE_SIZE_MAX_BYTES = 1024 * 1024 # 1 MB
+LOG_FILE_MAX_COUNT      = 5
+
 def setup_logging(log_file_path:str|PathLike[str]|None=None):
 	"""Establish logging handlers"""
 
 
-	logging.basicConfig(level=logging.DEBUG)
+	root = logging.getLogger()
+	root.setLevel(logging.DEBUG)
+
+	formatter = logging.Formatter(LOG_FORMAT)
+
+	console_handler = logging.StreamHandler()
+	console_handler.setLevel(logging.INFO)
+	console_handler.setFormatter(formatter)
+
+	root.addHandler(console_handler)
 
 	if log_file_path is None:
 
@@ -28,10 +41,10 @@ def setup_logging(log_file_path:str|PathLike[str]|None=None):
 
 	else:
 		
-		file_handler = RotatingFileHandler(str(log_file_path), maxBytes=1024 * 1024, backupCount=5)
+		file_handler = RotatingFileHandler(str(log_file_path), maxBytes=LOG_FILE_SIZE_MAX_BYTES, backupCount=LOG_FILE_MAX_COUNT)
 		file_handler.setLevel(logging.DEBUG)
-		file_handler.setFormatter(logging.Formatter("[%(asctime)s]\t%(levelname)s\t%(name)s\t%(message)s"))
+		file_handler.setFormatter(formatter)
 
-		logging.getLogger().addHandler(file_handler)
+		root.addHandler(file_handler)
 
 	logging.getLogger(__name__).info("Hello from %s", __name__)
