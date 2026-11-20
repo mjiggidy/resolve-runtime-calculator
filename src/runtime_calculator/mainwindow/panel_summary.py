@@ -7,7 +7,7 @@ class TRTSummaryPanel(TRTAbstractWidget):
 		super().__init__(ui_manager)
 
 		self._lbl_status = self._ui.Label({
-			"Weight":0,
+#			"Weight":0,
 			"Text":"No Items",
 			"MinimumSize":[200,20],
 			"Events":{}
@@ -35,7 +35,7 @@ class TRTSummaryPanel(TRTAbstractWidget):
 
 		return self._ui.HGroup([
 				self._lbl_status,
-				self._ui.HGap(),
+#				self._ui.HGap(),
 				self._lbl_trt,
 				self._txt_trt,
 			])
