@@ -1,4 +1,4 @@
 resolve-common @ git+https://github.com/mjiggidy/resolve-common.git@v0.3
 timecode @ git+https://github.com/mjiggidy/timecode.git@v1.0.0
-resolve-ui-mediapool-input @ git+https://github.com/mjiggidy/resolve-ui-mediapool-input.git@v0.4
+resolve-ui-mediapool-input @ git+https://github.com/mjiggidy/resolve-ui-mediapool-input.git@v0.5
 resolve-ui-timecode-input @ git+https://github.com/mjiggidy/resolve-ui-timecode-input.git@v0.2
