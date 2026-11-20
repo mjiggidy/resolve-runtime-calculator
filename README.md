@@ -12,8 +12,8 @@ A simple runtime calculator for Davinci Resolve.  Selected media pool items can 
 
 ## Requirements
 
-- Davinci Resolve Studio 21.0.4 or newer
-- Python 3.11 or newer
+- Davinci Resolve Studio 21.2 or newer
+- Python 3.12 or newer
 
 ## Installation
 
