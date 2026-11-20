@@ -21,9 +21,9 @@ class TRTAboutPanel(TRTAbstractWidget):
 		font_about = self._ui.Font({"PointSize": 10})
 
 		self._lbl_about_author = self._ui.Label({
-			"Weight":0,
+#			"Weight":0,
 			"Font": font_about,
-			"Text": "Written by Michael Jordan |"
+			"Text": "Written by Michael Jordan"
 		})
 
 		self._lbl_about_links  = self._ui.Label({
@@ -39,6 +39,5 @@ class TRTAboutPanel(TRTAbstractWidget):
 		
 		return self._ui.HGroup([
 			self._lbl_about_author,
-#			self._ui.HGap(),
 			self._lbl_about_links,
 		])
